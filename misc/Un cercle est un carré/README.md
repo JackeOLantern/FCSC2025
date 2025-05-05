@@ -165,6 +165,3 @@ le code est dans src/test_projections
 # Script : carre_brute
 
 [Voir le code source](src/carre_brute.py)
-
-
-
