@@ -7,12 +7,12 @@
 
 Différentes configurations des points sont représentées sur le cube figurant à la suite. A : Alice ; B : Bob
 
-Les différents cas  pour A et B :
+## Les différents cas, pour A et B :
 
 Considérons les différents cas de figures.
 
-## détecter les faces
-on nomme les faces par rapport a x constant et vaut 0 : x0, x constant et vaut 1 longueur 32 : x1 etc..
+## Détecter les faces
+Les faces sont nommées par rapport a x; si x constant et vaut 0 : x0, x constant et vaut 1 longueur 32 : x,  etc.
 
 ```python
 def list_faces(p: Tuple[int, int, int]):
@@ -34,9 +34,10 @@ def list_faces(p: Tuple[int, int, int]):
 
 ```
 ## Cas 1
- A et B Xsont sur la même face du cube. Le plus court chemin est la ligne droite entre les deux points. La fonction de la distance au carré correspond à appliquer Pythagore dans un espace à 3D.
+ A et B sont sur la même face du cube. Le plus court chemin est la ligne droite entre les deux points. La fonction de la distance au carré correspond à appliquer Pythagore.
+
 ![Cas 1](img/cas1.png)
-### calcul cas1
+### Calcul du cas1
 La fonction d2_same_face(A,B) : teste au moins une coordonnée x, y ou z idem : la différence vaut 0.
 La fonction def list_faces (p) : établit la liste des faces sur lesquelles se trouve le point (entre 1 et 3).
 
@@ -51,7 +52,7 @@ X0 désigne, conventionnellement, la face devant nous et X1 désigne la face arr
 
 
 ## Cas 2
- c’est la situation la plus fréquente. A et B ne sont pas sur la même face, mais ils sont sur des faces adjacentes. Il n’y a pas de calcul de distance directe ; car il s’agit d’aller d’abord à la face de l’arête : de A jusqu’au point I puis de I jusqu’à B ; I étant sur l’arête tel que distance(A,I) + distance(I,B) est minimale.
+C’est la situation la plus fréquente. A et B ne sont pas sur la même face, mais ils sont sur des faces adjacentes. Il n’y a pas de calcul de distance directe ; car il s’agit d’aller d’abord à la face de l’arête : de A jusqu’au point I puis de I jusqu’à B ; I étant sur l’arête tel que distance(A,I) + distance(I,B) est minimale.
 ![Cas 2](img/cas2.png)
 
 Pour le calcul du cas 2 et des suivants : voir ci apres le mode de calcul
@@ -85,7 +86,7 @@ Avec la face de A et B, I est trouvé sur le bord ; chaque segment est découpé
   ```
 ![Cas 2 recherche basique](img/cas2_recherche_basique.png) 
 
-On a placé I sur des coordonnées entières ce qui est évidemment une approximation : nous y reviendrons juste après.
+I est placé sur des coordonnées entières; ce qui est évidemment une approximation : nous y reviendrons juste après.
 
  La distance (A,I) se calcul tres simplement car même face et le nombre de segments est très raisonnable.
  
@@ -94,12 +95,12 @@ On a placé I sur des coordonnées entières ce qui est évidemment une approxim
   ```python
  def meilleurs_points_communs(liste_A, liste_B, liste_adjacent, best):
   ```
-  On trouve le meilleur I avec le code cas2 dans la fonction ci-dessus.
+  On trouve le meilleur I avec le code du cas2, dans la fonction ci-dessus.
 
   Toutefois, il s’agit juste d’une approximation car la position de I n’est pas forcément aux coordonnées entières. 
   
   La vraie distance est entre I et I-1 ou entre I et I+1 (points prédécesseur ou successeur) en approches. L’estimation reprend de In-1 à In+1 et le segment est redécoupé, par pas de : 1/10 (paramètre réglable). 
-  On sait que c'est autour du I précédent qui était notre meilleure approximation donc on redecoupe pour avoir le détail
+  On sait que c'est autour du I précédent qui était notre meilleure approximation donc on redecoupe pour avoir le détail.
   ![Cas 2 recherche fine](img/cas2_recherche_fine.png) 
 
 La convergence est rapide au bout de quelques pas. L’approximation est liée à l’erreur d’angle entre A,B.
@@ -115,7 +116,7 @@ Si ce score de nouvelle distance est supérieur à best, la valeur n’est pas r
 
 Tous les candidats obtenus, sont triés par ordre croissant ; en retour le premier candidat de la liste triée.
 
-## calcul cas3 : 
+## Calcul du cas3 : 
 On garde le calcul du type cas2 comme une référence pour le "best" jusque la ce qui va éliminer beaucoup de calculs
 
 On refait pareil mais avec deux points I1 sur la face de A et I2 sur la face de B
@@ -127,7 +128,7 @@ Le cas 2 avec un seul point I est traité avant le cas 3 ; car même en n’éta
 
 Le cas 3 puis le cas 4 sont résolus à l’identique avec la plupart des tirages traités. Il reste le dernier cas 5.
 
-## calcul cas 5
+## Calcul cas 5
  ![Cas 5 recherche fine](img/cas5_principe.png) 
 Il faut considérer un nouveau point I3 et voir toutes les possibilités pour l’ensemble de points : I1, I2, I3.
 I3B et AI1 ont déjà été calculé ; il n’y a pas le I2 au milieu ; considérons les segments qui relient la face A à la face B : les points I adjacents. Après plusieurs étapes, la distance a été établie pour AI1, due au cas 4.
@@ -150,11 +151,11 @@ Il est prérequis d’installer un environnement virtuel de compilation et le sc
 # Annexe
 Le script associé: carre2.py permettait de confirmer jusqu’à l’exemple de l’énoncé contraint pour (A,B).
 
-ce calcul utilisait des projections rotations de points des faces sur un cube aplati.
+Ce calcul utilisait des projections en rotations de points des faces sur un cube aplati.
 
-Il donne des résultats correct sur pas mal de cas mais devait y avoir une erreur car il n'a pu valider le flag. Pas eu le temps de le finaliser
+Il donne des résultats corrects sur un bon nombre de cas mais il devait y avoir une erreur car il n'a pu valider le flag. Pas eu le temps de le finaliser.
 
-le code est dans src/test_projections
+Le code est dans : src/test_projections
 
  ![projection plane ](img/image_cube_plan.png)
 
