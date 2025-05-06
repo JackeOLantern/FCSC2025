@@ -55,20 +55,20 @@ X0 désigne, conventionnellement, la face devant nous et X1 désigne la face arr
 C’est la situation la plus fréquente. A et B ne sont pas sur la même face, mais ils sont sur des faces adjacentes. Il n’y a pas de calcul de distance directe ; car il s’agit d’aller d’abord à la face de l’arête : de A jusqu’au point I puis de I jusqu’à B ; I étant sur l’arête tel que distance(A,I) + distance(I,B) est minimale.
 ![Cas 2](img/cas2.png)
 
-Pour le calcul du cas 2 et des suivants : voir ci apres le mode de calcul
+Pour le calcul du cas 2 et des suivants : voir ci-après le mode de calcul.
 
-Les autres cas à considérer sont
+Les autres cas à considérer sont :
 ## Cas 3
-A et B sont sur des daces adjacentes mais en changeant de face pour aller de A à B en passant par une face commune évidente ; distance (A,B) = distance (A, I1) + distance(I1, I2) + distance (I2,B).
+A et B sont sur des faces adjacentes mais en changeant de face pour aller de A à B en passant par une face commune évidente ; distance (A,B) = distance (A, I1) + distance(I1, I2) + distance (I2,B).
 ![Cas 3](img/cas3.png)
 
 ## Cas 4
 A et B sont sur des faces opposées (suite du cas 3) avec I1 et I2 obligatoires en face intermédiaire.
-Il s’agit donc de trouver I1 et I2 tels que : AI1+ I1I2 + I2B soit minimum avec les deux faces opposées.
+Il s’agit donc de trouver I1 et I2 tels que : AI1 + I1I2 + I2B soit minimum avec les deux faces opposées.
 ![Cas 4](img/cas4.png)
 
 ## Cas 5
-le chemin le plus court passe par deux faces intermédiaires : il y a à changer deux fois de faces si B est proche d’un bord. Il y a 3 points intermédiaires I1, I2, I3 tels que AI1+I1I2+I2I3+I3B est minimal.
+le chemin le plus court passe par deux faces intermédiaires : il y a à changer deux fois de faces si B est proche d’un bord. Il y a 3 points intermédiaires I1, I2, I3 tels que AI + I1I2 + I2I3 + I3B est minimal.
 ![Cas 5](img/cas5.png)
 
 # Le calcul hors du cas1 trivial précédent
@@ -80,18 +80,18 @@ Le choix est celui d’une recherche en « semi brute force » au lieu de projec
 
 Le script correspondant à la résolution simple : carre_brute.py est plus informatique que mathématique.
 
-Avec la face de A et B, I est trouvé sur le bord ; chaque segment est découpé en 32 unités depuis I à A et la découpe est pareille pour I de B ce qui donne deux tableaux de points se recoupant partiellement.
+Avec la face de A et B, I est trouvé sur le bord ; chaque segment est découpé en 32 unités depuis I à A et la découpe est pareille pour I de B; ce qui donne deux tableaux de points se recoupant partiellement.
   ```python
   def points_I_detail(A, I, face_A):
   ```
 ![Cas 2 recherche basique](img/cas2_recherche_basique.png) 
 
-I est placé sur des coordonnées entières; ce qui est évidemment une approximation : nous y reviendrons juste après.
+I est placé sur des coordonnées entières; ce qui est, évidemment, une approximation : nous y reviendrons juste après.
 
- La distance (A,I) se calcul tres simplement car même face et le nombre de segments est très raisonnable.
+ La distance (A,I) se calcule très simplement car en même face et le nombre de segments est très raisonnable.
  
   La distance(A,B) = AB est minimale avec AI + IB minimales.
-  AI et IB etant en calcul direct il est facile de trouver AI + IB minimale
+  AI et IB etant en calcul direct, il est facile de trouver AI + IB minimale.
   ```python
  def meilleurs_points_communs(liste_A, liste_B, liste_adjacent, best):
   ```
@@ -100,31 +100,31 @@ I est placé sur des coordonnées entières; ce qui est évidemment une approxim
   Toutefois, il s’agit juste d’une approximation car la position de I n’est pas forcément aux coordonnées entières. 
   
   La vraie distance est entre I et I-1 ou entre I et I+1 (points prédécesseur ou successeur) en approches. L’estimation reprend de In-1 à In+1 et le segment est redécoupé, par pas de : 1/10 (paramètre réglable). 
-  On sait que c'est autour du I précédent qui était notre meilleure approximation donc on redecoupe pour avoir le détail.
+  On sait que c'est autour du I précédent qui était notre meilleure approximation donc on redécoupe pour avoir le détail.
   ![Cas 2 recherche fine](img/cas2_recherche_fine.png) 
 
 La convergence est rapide au bout de quelques pas. L’approximation est liée à l’erreur d’angle entre A,B.
 Si la récursion sur 10 pas ne suffit pas, il y a récursion sur 100 pas, avec les points I sur les bords de face. Mais 10 a suffi sur ce défi. 
 
-comme on compare toujoiurs à best (la meilleure distance trouvé les cas s'éliminent très vite)
+Comme on compare toujoiurs à best (la meilleure distance trouvée, les cas s'éliminent très vite)
 
 __Note sur le code :__ 
 
-Seuls les points uniques sont gardés et les doublons enlevés. La méthode est sur X fixé, de varier Y ou Z ; si Y est fixé, de varier X ou Z, si Z est fixé, de varier X ou Y : la formule alternative est commune ; et une meilleure distance est retenue jusqu’à l’instant où un autre meilleur candidat est trouvé (libellé « best ») donc partant de B : il est testé IB < best et partant de A, AI < best. (AI +IB)^2=((sqrt(AI^2) +sqrt(IB^2)).
+Seuls les points uniques sont gardés et les doublons enlevés. La méthode est : sur X fixé, de varier Y ou Z ; si Y est fixé, de varier X ou Z, si Z est fixé, de varier X ou Y : la formule alternative est commune ; et une meilleure distance est retenue jusqu’à l’instant où un autre meilleur candidat est trouvé (libellé « best ») donc partant de B : il est testé IB < best et partant de A, AI < best. (AI +IB)^2=((sqrt(AI^2) +sqrt(IB^2)).
 
 Si ce score de nouvelle distance est supérieur à best, la valeur n’est pas retenue et la distance doit être inférieure en valeur pour être retenue comme nouveau candidat en meilleur choix (nouveau point best).
 
 Tous les candidats obtenus, sont triés par ordre croissant ; en retour le premier candidat de la liste triée.
 
 ## Calcul du cas3 : 
-On garde le calcul du type cas2 comme une référence pour le "best" jusque la ce qui va éliminer beaucoup de calculs
+On garde le calcul du type cas2 comme une référence pour le "best" jusque là; ce qui va éliminer beaucoup de calculs.
 
-On refait pareil mais avec deux points I1 sur la face de A et I2 sur la face de B
-
-
+On refait pareil mais avec deux points I1 sur la face de A et I2 sur la face de B.
 
 
-Le cas 2 avec un seul point I est traité avant le cas 3 ; car même en n’étant pas optimum, il reste un très bon candidat. Un deuxième point I2 est ajouté à un premier point I1 en passant par une autre face et on réitère le calcul de tous les points  I2 els que I2B < best en partant du point B ; en partant de A, le calcul est de tous les points I1 tels que AI1 < best puis : AI1 + I1I2 + I2B est calculé en devant demeurer < best.
+
+
+Le cas 2 avec un seul point I est traité avant le cas 3 ; car, même en n’étant pas optimum, il reste un très bon candidat. Un deuxième point I2 est ajouté à un premier point I1 en passant par une autre face et on réitère le calcul de tous les points : I2 tels que I2B < best en partant du point B ; en partant de A, le calcul est de tous les points I1 tels que AI1 < best puis : AI1 + I1I2 + I2B est calculé en devant demeurer < best.
 
 Le cas 3 puis le cas 4 sont résolus à l’identique avec la plupart des tirages traités. Il reste le dernier cas 5.
 
@@ -142,7 +142,7 @@ Très souvent, le calcul fait dépasser le candidat courant au score : pour cons
 
 Le nouveau candidat « best » est retenu. Après la connexion distante au netcat par : nc chall.fcsc.fr 2054, les coordonnées de Alice et Bob sont extraites en suites pour traiter vite par renvoi de réponse pour AB.
 
-La réponse est renvoyée des coordonnées de A et de B et le calcul recommence jusqu’à cette remarque : « Congrats ! Here is the flag « : deux lignes à lire pour avoir la valeur du flag qui sinon, ne s’affiche pas ! 
+La réponse est renvoyée des coordonnées de A et de B et le calcul recommence jusqu’à cette remarque : « Congrats ! Here is the flag « : deux lignes à lire pour avoir la valeur du flag qui, sinon, ne s’affiche pas ! 
 
 La connexion au serveur s’interrompt : la ligne raccroche. Il y a 1000 réponses consécutives pour le flag.
 Il est prérequis d’installer un environnement virtuel de compilation et le script PY s’exécute en 10 à 15’.
