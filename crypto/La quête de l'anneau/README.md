@@ -9,7 +9,7 @@ Le script Python la-quete-de-l-anneau.py implémente un chiffrement basé sur un
 
 ```python
 self.s = 2**size + randrange(2**size)
-
+```
 Par défaut, size = 512, donc s ≈ 2**512 est une clé de 1024 bits, ce qui n'est pas faible en soi. Mais si la taille de clé a été réduite (par exemple à size = 32 ou 64), alors l'espace de recherche pour s devient exploitable.
 
 ## Structure de ce chiffrement
