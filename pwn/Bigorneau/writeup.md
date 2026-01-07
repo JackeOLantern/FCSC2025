@@ -33,28 +33,24 @@ Le script Python (côté challenge) :
 
 Point clé : la contrainte “6 octets distincts” s’applique **au shellcode utilisateur** (la partie saisie), pas forcément au préfixe ajouté par le wrapper.
 
-## 3. Démarche de résolution (≤ 10 étapes)
+## 3. Démarche de résolution (payload final)
 
-1. **Lancer l’instance** (Docker local ou `nc chall.fcsc.fr 2102`).
-2. **Identifier le format d’entrée** : une chaîne hexadécimale représentant les octets du shellcode.
-3. **Confirmer les contraintes** : taille (≤128) et diversité d’octets (≤6).
-4. **Exploiter le contexte connu** : le wrapper remet les registres à zéro, donc on part d’un état initial stable.
-5. **Choisir une stratégie “2-stages”** :
-   - *Stage 0* : mini-décodeur utilisant ≤6 valeurs d’octets.
-   - *Stage 1* : shellcode standard qui effectue `open/read/write` sur `/flag`.
-6. **Encoder le Stage 1** (ex. XOR/ADD, ou écriture octet-par-octet) pour que le Stage 0 puisse le reconstruire.
-7. **Envoyer le Stage 0 + données encodées** en respectant strictement `len(set(stage0_bytes)) <= 6`.
-8. **Exécution** : le runner charge le blob et exécute : Stage 0 reconstruit Stage 1 puis branche dessus.
-9. **Récupérer la sortie** : le Stage 1 imprime le flag sur `stdout`.
-10. **Soumettre le flag** sur la plateforme.
+1. Lancer l’instance (Docker : `docker compose up`, puis `nc localhost 4000` côté client).
+2. Entrée attendue : une ligne hex → shellcode utilisateur (≤128 octets, ≤6 octets distincts).
+3. Contexte : le wrapper remet les registres à zéro puis exécute le blob.
+4. Choix “2-stages” minimal :
+   - **Stage 0** (8 octets, 6 valeurs distinctes) : `545eb2540f0554c3`  
+     Lit 0x54 octets sur stdin (stage 1) dans la pile, puis `ret` dessus.
+   - **Stage 1** (0x54 octets) : shellcode `open("/flag",0)` → `read` → `write`, padded en NOP.
+5. Envoi : ligne hex du stage0, courte pause pour laisser `input()` finir, puis flux binaire du stage1.
+6. Résultat : le stage1 imprime le flag sur stdout (extrait automatiquement par le solveur).
 
 ## 4. Points d’attention / debugging
 
-- Si le décodage est instable, vérifier :
-  - l’alignement et l’adresse RIP-relative utilisée par le Stage 0,
-  - la longueur exacte reconstruite,
-  - la présence de caractères `\n` dans l’entrée hex (côté netcat).
-- Pour itérer rapidement : tester en local (docker) puis valider sur remote.
+- Bien séparer la ligne hex (stage0) du flux binaire (stage1) pour éviter que `input()` ne lise des octets binaires.
+- Respect strict de `len(set(stage0)) <= 6`.
+- Padding du stage1 à 0x54 octets pour matcher la longueur lue par le stage0.
+ - Envoi manuel possible : `printf '545eb2540f0554c3\n'` puis stream du stage1 binaire (généré via `build_stage1` dans `solve.py`).
 
 ## 5. Flag
 

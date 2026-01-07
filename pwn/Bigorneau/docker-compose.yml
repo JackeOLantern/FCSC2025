@@ -1,0 +1,5 @@
+services:
+  bigorneau:
+    image: anssi/fcsc2025-pwn-bigorneau:latest
+    ports:
+      - "4000:4000"
