@@ -50,7 +50,8 @@ Point clé : la contrainte “6 octets distincts” s’applique **au shellcode 
 - Bien séparer la ligne hex (stage0) du flux binaire (stage1) pour éviter que `input()` ne lise des octets binaires.
 - Respect strict de `len(set(stage0)) <= 6`.
 - Padding du stage1 à 0x54 octets pour matcher la longueur lue par le stage0.
- - Envoi manuel possible : `printf '545eb2540f0554c3\n'` puis stream du stage1 binaire (généré via `build_stage1` dans `solve.py`).
+- Envoi manuel possible : `printf '545eb2540f0554c3\n'` puis stream du stage1 binaire (généré via `build_stage1` dans `solve.py`).
+ - Le stage1 écrit seulement le nombre d’octets réellement lus (`mov rdx, rax` avant `write`) pour éviter l’affichage de padding.
 
 ## 5. Flag
 

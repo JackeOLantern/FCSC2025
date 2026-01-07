@@ -35,6 +35,7 @@ Ce dépôt regroupe les fichiers du challenge **Bigorneau** (FCSC 2025) et une d
   c3                ret              ; jump stage 1
   ```
 - **Stage 1** : shellcode classique `open("/flag", 0)` → `read` → `write`, généré avec pwntools et padded à 0x54 octets (voir `solve.py`).
+  Il écrit uniquement le nombre d’octets réellement lus (pas de “bruit” binaire après le flag).
 
 Astuce d’envoi : ne pas enchaîner immédiatement le stage 1 après la ligne hex (sinon `input()` côté challenge peut tenter de décoder des octets binaires). Le solveur attend brièvement avant d’envoyer le stage 1 brut.
 

