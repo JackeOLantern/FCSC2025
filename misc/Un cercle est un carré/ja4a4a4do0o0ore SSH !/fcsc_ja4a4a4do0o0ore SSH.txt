@@ -1,5 +1,0 @@
-tshark -r ja4a4a4do0o0re-ssh.pcap -d tcp.port==2222,ssh -Y "tcp.stream==100 && ssh" -V | grep -i cookie
-                Cookie: f24e0ff9dc4c1c005d5f3aaac4853575
-                Cookie: 90c7d30853db0f93bc8dad28c7b62b4d
-
-FCSC{f24e0ff9dc4c1c005d5f3aaac4853575-90c7d30853db0f93bc8dad28c7b62b4d}
